@@ -2,7 +2,7 @@
 
 This module introduces the concept of **Inheritance** in C++. The goal is to learn how to design hierarchical class structures, reuse code efficiently, and navigate the complexities of multiple inheritance and virtual base classes.
 
----
+
 
 ## 🧠 Key Learning Objectives
 
@@ -13,7 +13,7 @@ This module introduces the concept of **Inheritance** in C++. The goal is to lea
 
 
 
----
+
 
 ## 📂 Exercise Breakdown
 
@@ -48,11 +48,11 @@ This module introduces the concept of **Inheritance** in C++. The goal is to lea
 
 
 
----
+
 
 ## 🚀 Technical Requirements
 * **Standard**: C++ 98.
 * **Compiler**: `c++` with `-Wall -Wextra -Werror` flags.
 * **Safety**: Ensuring that all allocated memory is properly managed and that the class hierarchy follows the **Orthodox Canonical Form**.
 
----
+
