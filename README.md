@@ -89,10 +89,4 @@ int main() {
 
 In this modified example, both `B` and `C` inherit from `A` using virtual inheritance, which allows `D` to call the `display()` method unambiguously.
 
-## Conclusion
 
-The Diamond Problem is a classic issue in multiple inheritance that can lead to confusion and errors if not properly managed. By understanding the hierarchy and employing techniques such as virtual inheritance, you can effectively resolve these ambiguities in your code.
-
-### References
-- C++ Programming Language by Bjarne Stroustrup
-- Effective C++ by Scott Meyers
