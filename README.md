@@ -1,58 +1,98 @@
-# CPP Module 03 - Inheritance & Diamond Problem
+# Understanding the Diamond Problem
 
-This module introduces the concept of **Inheritance** in C++. The goal is to learn how to design hierarchical class structures, reuse code efficiently, and navigate the complexities of multiple inheritance and virtual base classes.
+The Diamond Problem is a term in object-oriented programming that describes an ambiguity that arises when a particular class inherits from two or more classes that have a common base class. This situation can lead to confusion over which superclass method or property should be used in the subclass, hence the name ‘Diamond’, as the class hierarchy resembles a diamond shape.
 
+## Hierarchical Structure
 
+To understand the Diamond Problem, consider the following class structure:
 
-## 🧠 Key Learning Objectives
+```
+      A
+     / \ 
+    B   C 
+     \ / 
+      D  
+```
 
-* **🟢 Basic Inheritance**: Understanding how to extend a base class to create specialized derived classes.
-* **🔵 Member Initialization**: Mastering the order of constructor and destructor calls in an inheritance chain.
-* **🟡 Protected Attributes**: Learning the difference between `private` and `protected` access specifiers.
-* **🔴 The Diamond Problem**: Resolving ambiguity and duplicate base subobjects in multiple inheritance using `virtual` inheritance.
+Here, class `D` inherits from both classes `B` and `C`, which in turn both inherit from class `A`. If class `A` has a method `display()`, there is an ambiguity when class `D` tries to call `display()`. Should it call `display()` from class `B` or `C`?
 
+## Example Code
 
+Below is an example in C++ to illustrate the Diamond Problem:
 
+```cpp
+#include <iostream>
+using namespace std;
 
+class A {
+public:
+    void display() {
+        cout << "Display of A" << endl;
+    }
+};
 
-## 📂 Exercise Breakdown
+class B : public A {
+    // B inherits display() from A
+};
 
-### 🟢 Ex00: Aaaaand... OPEN!
-* **Goal**: Implement a basic class `ClapTrap` with attributes (Hit points, Energy points, Attack damage).
-* **Concepts**:
-    * Encapsulation of data.
-    * Basic member functions for combat logic (attack, takeDamage, beRepaired).
-    * Resource management (Energy points as a limiting factor).
+class C : public A {
+    // C inherits display() from A
+};
 
-### 🔵 Ex01: Serena, my love!
-* **Goal**: Create a derived class `ScavTrap` that inherits from `ClapTrap`.
-* **Concepts**:
-    * **Constructor Chaining**: Understanding that a `ClapTrap` must exist before a `ScavTrap` can be built.
-    * **Method Overriding**: Providing a more specialized `attack` method for the derived class.
-    * **Protected Access**: Accessing base class attributes from a child class.
+class D : public B, public C {
+    // D inherits display() from B and C
+};
 
+int main() {
+    D d;
+    // d.display(); // Error: Ambiguous call to display()
+    d.B::display(); // Calls display() from class B
+    return 0;
+}
+```
 
+In the above code:
+- Class `A` has a method `display()`. 
+- Classes `B` and `C` inherit from `A`.
+- Class `D` inherits from both `B` and `C`.
+- When attempting to call `d.display()`, the compiler raises an error due to ambiguity.
 
-### 🟡 Ex02: Repetitive Work
-* **Goal**: Implement another derived class `FragTrap` with different stats and unique abilities.
-* **Concepts**:
-    * **Code Reuse**: Leveraging the base class to avoid redundant logic.
-    * **Class Differentiation**: Designing multiple children with distinct personalities and values from the same parent.
+## Resolution of the Diamond Problem
 
-### 🔴 Ex03: Now it’s weird!
-* **Goal**: Create a `DiamondTrap` that inherits from both `ScavTrap` and `FragTrap`.
-* **Concepts**:
-    * **Multiple Inheritance**: Inheriting attributes and behaviors from two different parents.
-    * **The Diamond Problem**: Solving the issue where `DiamondTrap` would otherwise contain two copies of `ClapTrap`.
-    * **Virtual Inheritance**: Using the `virtual` keyword in inheritance to ensure only one "ancestor" subobject exists.
+### Virtual Inheritance
 
+One of the common ways to resolve the Diamond Problem in C++ is to use virtual inheritance. By using `virtual` keyword, you can ensure that the base class is only inherited once, hence avoiding ambiguity:
 
+```cpp
+class A {
+public:
+    void display() {
+        cout << "Display of A" << endl;
+    }
+};
 
+class B : virtual public A {
+};
 
+class C : virtual public A {
+};
 
-## 🚀 Technical Requirements
-* **Standard**: C++ 98.
-* **Compiler**: `c++` with `-Wall -Wextra -Werror` flags.
-* **Safety**: Ensuring that all allocated memory is properly managed and that the class hierarchy follows the **Orthodox Canonical Form**.
+class D : public B, public C {
+};
 
+int main() {
+    D d;
+    d.display(); // Correctly calls display() from class A
+    return 0;
+}
+```
 
+In this modified example, both `B` and `C` inherit from `A` using virtual inheritance, which allows `D` to call the `display()` method unambiguously.
+
+## Conclusion
+
+The Diamond Problem is a classic issue in multiple inheritance that can lead to confusion and errors if not properly managed. By understanding the hierarchy and employing techniques such as virtual inheritance, you can effectively resolve these ambiguities in your code.
+
+### References
+- C++ Programming Language by Bjarne Stroustrup
+- Effective C++ by Scott Meyers
